@@ -1,0 +1,229 @@
+crud.php
+
+ <?php
+	$db=mysqli_connect("localhost","root","","stud");
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+	a{
+		text-decoration:none;
+		color:white;
+	}
+	a:hover{
+		
+		color:black;
+	}
+	</style>
+</head>
+<body background="1.jpg">
+	<h1>&nbsp;&nbsp;&nbsp;&nbsp;<font face="lato" align="left"size="8">logo</font>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<font face="cenzial" size="4" >
+		<a href="home.php">HOME</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="about.php">ABOUT</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="crud.php">CRUD</a>
+		</font>
+	</h1>
+	 
+	<center>
+	<h1 align="center">
+	<font size="5">
+		CRUD OPERATION
+	</font>
+	</h1>   
+	</center>
+	<br/>
+	<center>
+	<form method="post">
+		 <label>Name</label>
+		 <input type="text" name="name" placeholder="please enter your name">
+		 <br/><br/>
+		 <label>Email</label>
+		 <input type="email" name="email" placeholder="please enter your email">
+		 <br/><br/>
+		 <label>Address</label>
+		 <input type="address" name="address" placeholder="please enter your address">
+		 <br/><br/>
+		 <input type="submit" name="submit" value="Submit">
+	</form>
+	<hr>
+	<h3>User list</h3>
+	<table style="width: 80%" border="1">
+		<tr>
+			<th>S#</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Address</th>
+			<th>Operation</th>
+		</tr>
+		<?php
+		$i=1;
+			$qry = "select * from user";
+			$run = $db -> query($qry);
+			if($run -> num_rows > 0){
+				while($row= $run -> fetch_assoc()){
+					$id = $row['id'];
+			
+		?>
+		<tr>
+			<td><?php echo $i++; ?></td>
+			<td><?php echo $row['name']?></td>
+			<td><?php echo $row['email']?></td>
+			<td><?php echo $row['address']?></td>
+			<td>
+				<a href="edit.php?id=<?php echo $id; ?>">Edit</a> |
+				<a href="delete.php?id=<?php echo $id; ?>" onclick="return confirm('are you sure ?')">Delete</a>
+			</td>
+		</tr>
+		<?php
+			  }
+			}
+		?>
+	</table>
+	</center>
+</body>
+
+</html>
+<?php 
+	if(isset($_POST['submit'])){
+		$name=$_POST['name'];
+		$email=$_POST['email'];
+		$address=$_POST['address'];
+		
+		$qry="insert into user values(null,'$name','$email','$address')";
+		if(mysqli_query($db,$qry)){
+			echo '<script>alert("User registerrd successfully.");</script>';
+			header('location:crud.php');
+		}
+		else{
+			echo mysqli_error($db);
+		}
+		
+	}
+
+
+?>
+
+delete.php
+
+<?php
+	$db=mysqli_connect("localhost","root","","stud");
+	if(!$db){
+		die('error in db' . mysqli_error($db));
+	}
+	
+	$id = $_GET['id'];
+	
+	$qry = "delete from user where id = $id";
+	if(mysqli_query($db,$qry)){
+		header('location:crud.php');
+	}else{
+		echo mysqli_error($db);
+	}
+?>
+
+edit.php
+
+<?php
+	$db=mysqli_connect("localhost","root","","stud");
+	if(!$db){
+		die('error in db' . mysqli_error($db));
+	}
+	else{
+		$id = $_GET['id'];
+		$qry = "select * from user where id=$id";
+		$run = $db -> query($qry);
+		if($run -> num_rows > 0){
+			while($row= $run -> fetch_assoc()){
+				$name= $row['name'];
+				$email=$row['email'];
+				$address=$row['address'];
+			}
+		}
+	}
+	
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>edit data</title>
+		<style>
+	a{
+		text-decoration:none;
+		color:white;
+	}
+	a:hover{
+		
+		color:black;
+	}
+	</style>
+	</head>
+	<body background="1.jpg">
+	<h1>&nbsp;&nbsp;&nbsp;&nbsp;<font face="lato" align="left"size="8">logo</font>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<font face="cenzial" size="4" >
+		<a href="home.php">HOME</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="about.php">ABOUT</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="crud.php">CRUD</a>
+		</font>
+	</h1>
+	<center>
+	<h1 align="center">
+	<font size="5">
+		UPDATE DETAILS
+	</font>
+	</h1>   
+	</center>
+	<br/>
+		<center>
+		<form method="post">
+		 <label>Name</label>
+		 <input type="text" name="name" value="<?php echo $name ;?>">
+		 <br/><br/>
+		 <label>Email</label>
+		 <input type="email" name="email" value="<?php echo $email ;?>">
+		 <br/><br/>
+		 <label>Address</label>
+		 <input type="address" name="address" value="<?php echo $address ;?>">
+		 <br/><br/>
+		 <input type="submit" name="update" value="Update">
+	</form>
+		</center>
+	</body>
+</html>
+
+<?php 
+	if(isset($_POST['update'])){
+		$name = $_POST['name'];
+		$email =$_POST['email'];
+		$address=$_POST['address'];
+		
+		$qry="update user set name='$name', email='$email',address='$address' where id= $id";
+		if(mysqli_query($db,$qry)){
+			header('location:crud.php');
+		}else{
+			echo mysqli_error($db);
+		}
+		
+		
+	}
+?>
+
+
